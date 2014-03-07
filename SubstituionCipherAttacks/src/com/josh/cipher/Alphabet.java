@@ -27,5 +27,13 @@ public class Alphabet {
 	        alphabet[i] = temp;
 	    }
 	}
+	
+	public char getGene(int i) {
+		return alphabet[i];
+	}
+	
+	public void setGene(int i, char c) {
+		alphabet[i] = c;
+	}
 
 }
