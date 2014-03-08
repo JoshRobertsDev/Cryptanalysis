@@ -15,21 +15,19 @@ public class Genetic {
     private static final boolean elitism = true;
     private static Random random = new Random();
     private static Fitness fitness = new Fitness();
-    private static String cipherText;
     public static char[] bestKey;
     public static double bestScore = 0;
     
     public Genetic(String cipherText) {
     	fitness.setCipherText(cipherText);
-    	this.cipherText = cipherText;
     }
 
     public static Population evolvePopulation(Population oldPopulation) {
-        Population newPopulation = new Population(oldPopulation.size(), cipherText);
+        Population newPopulation = new Population(oldPopulation.size());
         
         int elitismOffset = 0;
         if (elitism) {
-        	char[] eliteKey = oldPopulation.getFittestFromPopulation();
+        	char[] eliteKey = getFittestFromPopulation(oldPopulation);
         	System.out.println(eliteKey);
         	double eliteKeyScore = fitness.score(eliteKey);
         	if(eliteKeyScore >= bestScore) {
@@ -114,13 +112,27 @@ public class Genetic {
 	}
 
     private static Alphabet selectParent(Population population) {
-        Population tournament = new Population(tournamentSize, cipherText);
+        Population tournament = new Population(tournamentSize);
         for (int i = 0; i < tournamentSize; i++) {
             int randomId = (int) (Math.random() * population.size());
             tournament.addKey(i, population.getKey(randomId));
         }
         Alphabet fittest = new Alphabet();
-        fittest.setAlphabet(tournament.getFittestFromPopulation());
+        fittest.setAlphabet(getFittestFromPopulation(tournament));
         return fittest;
+    }
+    
+    private static char[] getFittestFromPopulation(Population population) {
+    	char[] fittestKey = null;
+    	double fittestKeyScore = 0;
+    	
+    	for(int i = 0; i < population.size(); i++) {
+    		double newScore = fitness.score(population.getKey(i));
+    		if(newScore >= fittestKeyScore) {
+    			fittestKey = population.getKey(i);
+    			fittestKeyScore = newScore; 
+    		}
+    	}
+    	return fittestKey;
     }
 }

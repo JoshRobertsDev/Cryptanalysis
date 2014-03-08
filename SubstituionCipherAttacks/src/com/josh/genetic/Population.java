@@ -3,15 +3,12 @@ package com.josh.genetic;
 import java.util.ArrayList;
 import java.util.List;
 import com.josh.cipher.Alphabet;
-import com.josh.cipher.Fitness;
 
 public class Population {
 
-	private Fitness fitness = new Fitness();
     public List<char[]> keys = new ArrayList<>();
 
-    public Population(int populationSize, String cipherText) {
-    	fitness.setCipherText(cipherText);
+    public Population(int populationSize) {
     	for (int i = 0; i < populationSize; i++) {
         	keys.add(null);
         }
@@ -24,20 +21,6 @@ public class Population {
         	newKey.Scramble();
         	keys.set(i, newKey.getAlphabet().clone());
         }
-    }
-    
-    public char[] getFittestFromPopulation() {
-    	char[] bestKey = null;
-    	double bestScore = 0;
-    	
-    	for(int i = 0; i < keys.size(); i++) {
-    		double newScore = fitness.score(keys.get(i));
-    		if(newScore >= bestScore) {
-    			bestKey = keys.get(i);
-    			bestScore = newScore; 
-    		}
-    	}
-    	return bestKey;
     }
     
     public void setEliteKey(char[] key) {
