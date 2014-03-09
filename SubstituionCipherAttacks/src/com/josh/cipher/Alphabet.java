@@ -35,5 +35,5 @@ public class Alphabet {
 	public void setGene(int i, char c) {
 		alphabet[i] = c;
 	}
-
+	
 }
