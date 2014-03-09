@@ -2,40 +2,39 @@ package com.josh.genetic;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.josh.cipher.Alphabet;
 
 public class Population {
 
-    public List<char[]> keys = new ArrayList<>();
+    public List<Individual> individuals = new ArrayList<>();
 
     public Population(int populationSize) {
     	for (int i = 0; i < populationSize; i++) {
-        	keys.add(null);
+        	individuals.add(null);
         }
     }
     
     public void populate() {
-    	Alphabet newKey = new Alphabet();
+    	Individual newIndividual = new Individual();
     	
     	for (int i = 0; i < size(); i++) {
-        	newKey.Scramble();
-        	keys.set(i, newKey.getAlphabet().clone());
+    		newIndividual.Scramble();
+        	individuals.set(i, newIndividual);
         }
     }
     
-    public void setEliteKey(char[] key) {
-    	addKey(0, key);
+    public void setEliteIndividual(Individual individual) {
+    	addIndividual(0, individual);
     }
     
-    public void addKey(int i, char[] key) {
-    	keys.set(i, key);
+    public void addIndividual(int i, Individual individual) {
+    	individuals.set(i, individual);
     }
     
-    public char[] getKey(int i) {
-    	return keys.get(i);
+    public Individual getIndividual(int i) {
+    	return individuals.get(i);
     }
     
     public int size() {
-    	return keys.size();
+    	return individuals.size();
     }
 }
