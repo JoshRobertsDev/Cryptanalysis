@@ -9,31 +9,30 @@ import com.josh.cipher.Fitness;
 
 public class Genetic {
 
-	private static final double uniformRate = 0.5;
-    private static final double mutationRate = 1;
-    private static final int tournamentSize = 5;
-    private static final boolean elitism = true;
-    private static Random random = new Random();
-    private static Fitness fitness = new Fitness();
-    public static char[] bestKey;
-    public static double bestScore = 0;
+	private final double uniformRate = 0.5;
+    private final double mutationRate = 1;
+    private final int tournamentSize = 5;
+    private final boolean elitism = true;
+    private Random random = new Random();
+    private Fitness fitness = new Fitness();
+    public char[] bestKey;
+    public double bestScore = 0;
     
     public Genetic(String cipherText) {
     	fitness.setCipherText(cipherText);
     }
 
-    public static Population evolvePopulation(Population oldPopulation) {
+    public Population evolvePopulation(Population oldPopulation) {
         Population newPopulation = new Population(oldPopulation.size());
         
         int elitismOffset = 0;
         if (elitism) {
         	char[] eliteKey = getFittestFromPopulation(oldPopulation);
-        	System.out.println(eliteKey);
         	double eliteKeyScore = fitness.score(eliteKey);
         	if(eliteKeyScore >= bestScore) {
         		bestKey = eliteKey;
         		bestScore = eliteKeyScore;
-        		System.out.println(bestScore);
+        		System.out.println(new String(eliteKey) + " | " + bestScore);
         	}
             newPopulation.setEliteKey(eliteKey);
             elitismOffset = 1;
@@ -52,7 +51,7 @@ public class Genetic {
         return newPopulation;
     }
 
-    private static Alphabet crossover(Alphabet parent1, Alphabet parent2) {
+    private Alphabet crossover(Alphabet parent1, Alphabet parent2) {
     	Alphabet offspring = new Alphabet();
     	List<Character> offspringList = new ArrayList<>();
 
@@ -67,7 +66,7 @@ public class Genetic {
         return offspring;
     }
     
-    private static Character geneSelection(List<Character> offspring, Alphabet dominantParent, Alphabet recessiveParent, int i) {
+    private Character geneSelection(List<Character> offspring, Alphabet dominantParent, Alphabet recessiveParent, int i) {
     	if(!offspring.contains(dominantParent.getGene(i))) {
     		return dominantParent.getGene(i);
     	} else if(!offspring.contains(recessiveParent.getGene(i))) {
@@ -76,7 +75,7 @@ public class Genetic {
     	return ' ';
     }
     
-    private static char[] fillBlankGenes(List<Character> offspringList) {
+    private char[] fillBlankGenes(List<Character> offspringList) {
     	char[] offspring = new char[26];
     	List<Character> missingGenes = new ArrayList<>();
     	
@@ -96,7 +95,7 @@ public class Genetic {
 		return offspring;
     }
     
-    public static void mutate(char[] key) {
+    public void mutate(char[] key) {
 	    if (Math.random() <= mutationRate) {
 			int position1 = random.nextInt(26);
 			int position2 = random.nextInt(26);
@@ -111,7 +110,7 @@ public class Genetic {
 	    }
 	}
 
-    private static Alphabet selectParent(Population population) {
+    private Alphabet selectParent(Population population) {
         Population tournament = new Population(tournamentSize);
         for (int i = 0; i < tournamentSize; i++) {
             int randomId = (int) (Math.random() * population.size());
@@ -122,7 +121,7 @@ public class Genetic {
         return fittest;
     }
     
-    private static char[] getFittestFromPopulation(Population population) {
+    private char[] getFittestFromPopulation(Population population) {
     	char[] fittestKey = null;
     	double fittestKeyScore = 0;
     	
