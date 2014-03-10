@@ -1,9 +1,11 @@
 package com.josh.cipher;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Alphabet {
-	
+		
 	private char[] alphabet = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	
 	public char[] getAlphabet() {
@@ -12,6 +14,14 @@ public class Alphabet {
 	
 	public void setAlphabet(char[] alphabet) {
 		this.alphabet = alphabet;
+	}
+	
+	public char getLetter(int i) {
+		return alphabet[i];
+	}
+	
+	public void setLetter(int i, char c) {
+		alphabet[i] = c;
 	}
 	
 	public void Scramble() {
@@ -28,12 +38,33 @@ public class Alphabet {
 	    }
 	}
 	
-	public char getGene(int i) {
-		return alphabet[i];
-	}
+	public void fillBlanks(List<Character> alphabetList) {
+    	List<Character> missingLetters = new ArrayList<>();
+    	
+    	for(char gene = 'A'; gene <= 'Z'; gene++) {
+    		if(!alphabetList.contains(gene))
+    			missingLetters.add(gene);
+    	}
+    	
+    	for(int i = 0; i < alphabetList.size(); i++) {
+    		if(alphabetList.get(i) == ' ') {
+    			alphabet[i] = missingLetters.get(0);
+    			missingLetters.remove(0);
+    		} else {
+    			alphabet[i] = alphabetList.get(i);
+    		}
+    	}
+    } 
 	
-	public void setGene(int i, char c) {
-		alphabet[i] = c;
+	public void mutate() {
+		Random random = new Random();
+		int position1 = random.nextInt(26);
+		int position2 = random.nextInt(26);
+		while(position2 == position1) {
+			position2 = random.nextInt(26);
+		}
+		char temp = alphabet[position2];
+		alphabet[position2] = alphabet[position1];
+		alphabet[position1] = temp;
 	}
-	
 }

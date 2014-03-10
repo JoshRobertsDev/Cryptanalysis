@@ -1,6 +1,7 @@
 package com.josh.hc;
 
 import java.util.Random;
+
 import com.josh.cipher.Alphabet;
 import com.josh.cipher.Fitness;
 
@@ -15,7 +16,7 @@ public class HillClimb {
 	public HillClimb() {		
 	}
 	
-	public String searchOptimalKey(String cipherText, int noScoreImprovementLimit) {
+	public String searchOptimalKey(String cipherText, int limit) {
 		fitness.setCipherText(cipherText);
 		Alphabet key = new Alphabet();
 		key.Scramble();
@@ -24,7 +25,9 @@ public class HillClimb {
 		bestScore = fitness.score(key.getAlphabet());
 		
 		int noScoreImprovementCount = 0;
-		while(noScoreImprovementCount < noScoreImprovementLimit) {
+		double start = System.currentTimeMillis();
+		
+		while((System.currentTimeMillis() - start)/1000 < limit) {
 			key = mutateKey(key);
 			double newScore = fitness.score(key.getAlphabet());
 			

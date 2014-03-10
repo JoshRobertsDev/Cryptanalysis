@@ -35,17 +35,21 @@ public class ParticleSwarm {
 		}
 	}
 	
-	public String searchOptimalKey(int swarmSize, int iterations, String cipherText, double swarmConfidence, double particleSelfConfidence) {
+	public void searchOptimalKey(int swarmSize, int iterations, String cipherText, double swarmConfidence, double particleSelfConfidence) {
 		fitness.setCipherText(cipherText);
 		randomSwarm(swarmSize);
 		
-		for(int i = 0; i < iterations; i++) {
+		for(int i = 0; i <= iterations; i++) {
 			Particle swarmBest = new Particle();
 			swarmBest = getBestParticle();
 			for(int j = 0; j < swarmSize; j++) {
+				double pScore = fitness.score(swarm.get(j).getPosition());
+				if(pScore >= swarm.get(j).pBestScore) {
+					swarm.get(j).pBestScore = pScore;
+					swarm.get(j).pBest = swarm.get(j).getPosition();
+				}
 				swarm.get(j).updatePosition(swarmBest.getPosition(), swarmConfidence, particleSelfConfidence);
 			}
 		}
-		return null;
 	}
 }

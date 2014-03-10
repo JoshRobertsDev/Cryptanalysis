@@ -1,23 +1,57 @@
 package com.josh.genetic;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.josh.cipher.Fitness;
 
 public class Genetic {
 
+	private final boolean elitism = true;
 	private final double uniformRate = 0.5;
-    private final int tournamentSize = 5;
-    private final boolean elitism = true;
+    private int tournamentSize = 5;
     private Fitness fitness = new Fitness();
-    public Individual bestKey;
+    //private Population population;
+    public char[] bestKey;
     public double bestScore = 0;
     
-    public Genetic(String cipherText) {
-    	fitness.setCipherText(cipherText);
+    public void searchOptimalKey(int populationSize, int limit, String cipherText, int tournamentSize) {
+    	this.fitness.setCipherText(cipherText);
+    	this.tournamentSize = tournamentSize;
+    	
+    	Population population = new Population(populationSize);
+    	population.populate();
+    	
+    	StringBuilder sb = new StringBuilder();
+    	int interval = limit/20;
+    	int iterations = 0;
+    	int lastSecond = 0;
+    	double start = System.currentTimeMillis();
+    	
+    	while((System.currentTimeMillis() - start)/1000 < limit) {
+    		int currentSecond = (int) Math.floor((System.currentTimeMillis() - start)/1000);
+    		if(currentSecond > lastSecond) {
+    			sb.append(currentSecond + "," + bestScore + "\n");
+    		}
+    		lastSecond = currentSecond;
+    		population = evolvePopulation(population);
+    		iterations++;
+    	}
+    	/*for(int i = 0; i <= iterations; i++) {
+    		if(i % interval == 0) {
+    			sb.append(i + "," + bestScore + "\n");
+    		}
+    		population = evolvePopulation(population);
+    	}*/
+    	double stop = System.currentTimeMillis();
+    	double time = (stop - start)/1000;
+    	sb.append("\n\n" + iterations + " iterations in " + time + " seconds at " + iterations/time + " iterations/second");
+    	System.out.println(sb.toString());
     }
 
-    public Population evolvePopulation(Population oldPopulation) {
+    private Population evolvePopulation(Population oldPopulation) {
         Population newPopulation = new Population(oldPopulation.size());
         
         int elitismOffset = 0;
@@ -25,9 +59,9 @@ public class Genetic {
         	Individual eliteIndividual = getFittestFromPopulation(oldPopulation);
         	double eliteKeyScore = fitness.score(eliteIndividual.getAlphabet());
         	if(eliteKeyScore >= bestScore) {
-        		bestKey = eliteIndividual;
+        		bestKey = eliteIndividual.getAlphabet().clone();
         		bestScore = eliteKeyScore;
-        		System.out.println(new String(eliteIndividual.getAlphabet()) + " | " + bestScore);
+        		//System.out.println(new String(eliteIndividual.getAlphabet()) + " | " + bestScore);
         	}
             newPopulation.setEliteIndividual(eliteIndividual);
             elitismOffset = 1;
