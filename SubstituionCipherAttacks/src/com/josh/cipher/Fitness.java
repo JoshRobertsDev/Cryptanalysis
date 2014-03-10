@@ -12,7 +12,7 @@ public class Fitness {
 	//private List<List<String>> commonWords = new ArrayList<>();
 	
 	public Fitness() {
-		String dir = "C:/Users/robertsjf/Downloads/en_GB";
+		String dir = "Dictionaries/en_GB";
 		String language = "en_GB";
 		try {
 			d = Hunspell.getInstance().getDictionary(dir+"/"+language);
