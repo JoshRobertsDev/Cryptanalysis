@@ -17,7 +17,7 @@ public class Genetic {
     public char[] bestKey;
     public double bestScore = 0;
     
-    public void searchOptimalKey(int populationSize, int limit, String cipherText, int tournamentSize) {
+    public String searchOptimalKey(int populationSize, int limit, String cipherText, int tournamentSize) {
     	this.fitness.setCipherText(cipherText);
     	this.tournamentSize = tournamentSize;
     	
@@ -38,7 +38,8 @@ public class Genetic {
     		lastSecond = currentSecond;
     		population = evolvePopulation(population);
     		iterations++;
-    	}
+    	}	
+    	sb.append(limit + "," + bestScore + "\n");
     	/*for(int i = 0; i <= iterations; i++) {
     		if(i % interval == 0) {
     			sb.append(i + "," + bestScore + "\n");
@@ -49,6 +50,7 @@ public class Genetic {
     	double time = (stop - start)/1000;
     	sb.append("\n\n" + iterations + " iterations in " + time + " seconds at " + iterations/time + " iterations/second");
     	System.out.println(sb.toString());
+    	return sb.toString();
     }
 
     private Population evolvePopulation(Population oldPopulation) {

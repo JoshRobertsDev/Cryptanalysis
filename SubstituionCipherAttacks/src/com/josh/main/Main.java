@@ -1,5 +1,10 @@
 package com.josh.main;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.josh.cipher.Alphabet;
 import com.josh.cipher.Cipher;
 import com.josh.genetic.Genetic;
@@ -31,10 +36,29 @@ public class Main {
 		System.out.println("Deciphered Text: " + new String(Cipher.substitute(cipherText, hc.bestKey, alphabet.getAlphabet())));
 		System.out.println("Results: " + timeTaken + "s using " + hc.iterations + " iterations at " + hc.iterations/timeTaken + " i/s");
 	*/
-	
 		
 		Genetic genetic = new Genetic();
-		genetic.searchOptimalKey(20, 30, cipherText, 10);
+		String output = "";
+				
+				genetic.searchOptimalKey(20, 120, cipherText, 10);
+		
+		try {
+			File results = new File("results.txt");
+			if(!results.exists()) 
+				results.createNewFile();
+			FileWriter fw = new FileWriter(results.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(output);
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+		
+
+		
+		
 		
 		
 		//System.out.println(new String(key.getAlphabet()));
