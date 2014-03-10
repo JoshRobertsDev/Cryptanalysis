@@ -8,12 +8,9 @@ import java.io.IOException;
 import com.josh.cipher.Alphabet;
 import com.josh.cipher.Cipher;
 import com.josh.genetic.Genetic;
-import com.josh.genetic.Population;
-import com.josh.genetic2.Genetic2;
 import com.josh.hc.HillClimb;
 import com.josh.pso.Particle;
 import com.josh.pso.ParticleSwarm;
-import com.josh.pso.Vector;
 
 public class Main {
 
