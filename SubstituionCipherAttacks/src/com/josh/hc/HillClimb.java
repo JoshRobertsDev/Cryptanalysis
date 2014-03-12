@@ -16,7 +16,43 @@ public class HillClimb {
 	public HillClimb() {		
 	}
 	
-	public String searchOptimalKey(String cipherText, int limit) {
+	public Double[] searchOptimalKey(String cipherText, int iterations) {
+		fitness.setCipherText(cipherText);
+		Alphabet key = new Alphabet();
+		key.Scramble();
+		
+		int intervals = 20;
+    	int scoreIterator = 0;
+    	double scoreInterval = iterations/intervals;
+    	Double[] results = new Double[intervals+4];
+    	
+		bestKey = key.getAlphabet().clone();
+		bestScore = fitness.score(key.getAlphabet());
+		results[scoreIterator] = bestScore;
+		
+		double start = System.currentTimeMillis();
+		for(int i = 0; i <= iterations; i++) {
+			key = mutateKey(key);
+			double newScore = fitness.score(key.getAlphabet());
+			
+			if(newScore >= bestScore) {
+				bestKey = key.getAlphabet().clone();
+				bestScore = newScore;
+				
+			}
+			if(i % scoreInterval == 0) {
+    			scoreIterator++;
+    			results[scoreIterator] = bestScore;
+    		}
+		}
+		double time = (System.currentTimeMillis() - start)/1000;
+		results[intervals+1] = (double) iterations;
+    	results[intervals+2] = time;
+    	results[intervals+3] = iterations/time;
+		return results;
+	}
+	
+	public String searchOptimalKeyByTime(String cipherText, int limit) {
 		fitness.setCipherText(cipherText);
 		Alphabet key = new Alphabet();
 		key.Scramble();
