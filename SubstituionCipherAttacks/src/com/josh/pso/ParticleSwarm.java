@@ -23,7 +23,7 @@ public class ParticleSwarm {
 			if(newScore >= bestScore) {
 				bestScore = newScore;
 				swarmBest = swarm.get(i);
-				System.out.println(new String(swarmBest.getPosition()) + " | " + bestScore);
+				//System.out.println(new String(swarmBest.getPosition()) + " | " + bestScore);
 			}
 		}
 		return swarmBest;
@@ -35,13 +35,23 @@ public class ParticleSwarm {
 		}
 	}
 	
-	public void searchOptimalKey(int swarmSize, int iterations, String cipherText, double swarmConfidence, double particleSelfConfidence) {
+	public Double[] searchOptimalKey(int swarmSize, int iterations, String cipherText, double swarmConfidence, double particleSelfConfidence) {
 		fitness.setCipherText(cipherText);
 		randomSwarm(swarmSize);
 		
+		int intervals = 20;
+    	int scoreIterator = 0;
+    	double scoreInterval = iterations/intervals;
+    	Double[] results = new Double[intervals+4];
+		
+    	double start = System.currentTimeMillis();
 		for(int i = 0; i <= iterations; i++) {
 			Particle swarmBest = new Particle();
 			swarmBest = getBestParticle();
+			if(i % scoreInterval == 0) {
+    			results[scoreIterator] = fitness.score(swarmBest.getPosition());
+    			scoreIterator++;
+    		}
 			for(int j = 0; j < swarmSize; j++) {
 				double pScore = fitness.score(swarm.get(j).getPosition());
 				if(pScore >= swarm.get(j).pBestScore) {
@@ -50,6 +60,12 @@ public class ParticleSwarm {
 				}
 				swarm.get(j).updatePosition(swarmBest.getPosition(), swarmConfidence, particleSelfConfidence);
 			}
+			
 		}
+		double time = (System.currentTimeMillis() - start)/1000;
+		results[intervals+1] = (double) iterations;
+    	results[intervals+2] = time;
+    	results[intervals+3] = iterations/time;
+    	return results;
 	}
 }
