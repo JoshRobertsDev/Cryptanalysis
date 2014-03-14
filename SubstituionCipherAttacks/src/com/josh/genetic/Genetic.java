@@ -1,7 +1,5 @@
 package com.josh.genetic;
 
-import java.io.File;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,40 +15,70 @@ public class Genetic {
     public char[] bestKey;
     public double bestScore = 0;
     
-    public String searchOptimalKey(int populationSize, int limit, String cipherText, int tournamentSize) {
+    public Double[] searchOptimalKey(int populationSize, int iterations, String cipherText, int tournamentSize) {
     	this.fitness.setCipherText(cipherText);
     	this.tournamentSize = tournamentSize;
     	
     	Population population = new Population(populationSize);
     	population.populate();
     	
-    	StringBuilder sb = new StringBuilder();
-    	int interval = limit/20;
+    	int intervals = 20;
+    	int scoreIterator = 0;
+    	double scoreInterval = iterations/intervals;
+    	Double[] results = new Double[intervals+4];
+    	
+    	bestKey = getFittestFromPopulation(population).getAlphabet();
+    	bestScore = fitness.score(bestKey);
+    	results[scoreIterator] = bestScore;
+    	
+    	double start = System.currentTimeMillis();
+    	for(int i = 1; i <= iterations; i++) {
+    		population = evolvePopulation(population);
+    		if(i % scoreInterval == 0) {
+    			scoreIterator++;
+    			results[scoreIterator] = bestScore;
+    		}
+    	}
+    	double time = (System.currentTimeMillis() - start)/1000;
+    	
+    	results[intervals+1] = (double) iterations;
+    	results[intervals+2] = time;
+    	results[intervals+3] = iterations/time;
+    	return results;
+    }
+    
+    public Double[] searchOptimalKeyByTime(int populationSize, int limit, String cipherText, int tournamentSize) {
+    	this.fitness.setCipherText(cipherText);
+    	this.tournamentSize = tournamentSize;
+    	
+    	Population population = new Population(populationSize);
+    	population.populate();
+    	bestKey = getFittestFromPopulation(population).getAlphabet();
+    	bestScore = fitness.score(bestKey);
+    	
+    	//int interval = limit/20;
     	int iterations = 0;
-    	int lastSecond = 0;
+    	int lastSecond = -1;
+    	Double[] results = new Double[limit+4];
     	double start = System.currentTimeMillis();
     	
-    	while((System.currentTimeMillis() - start)/1000 < limit) {
+    	while((System.currentTimeMillis() - start)/1000 <= limit) {
     		int currentSecond = (int) Math.floor((System.currentTimeMillis() - start)/1000);
     		if(currentSecond > lastSecond) {
-    			sb.append(currentSecond + "," + bestScore + "\n");
+    			results[currentSecond] = bestScore;
     		}
     		lastSecond = currentSecond;
     		population = evolvePopulation(population);
     		iterations++;
-    	}	
-    	sb.append(limit + "," + bestScore + "\n");
-    	/*for(int i = 0; i <= iterations; i++) {
-    		if(i % interval == 0) {
-    			sb.append(i + "," + bestScore + "\n");
-    		}
-    		population = evolvePopulation(population);
-    	}*/
+    	}
+    	
     	double stop = System.currentTimeMillis();
     	double time = (stop - start)/1000;
-    	sb.append("\n\n" + iterations + " iterations in " + time + " seconds at " + iterations/time + " iterations/second");
-    	System.out.println(sb.toString());
-    	return sb.toString();
+    	results[limit] = bestScore;
+    	results[limit+1] = (double) iterations;
+    	results[limit+2] = time;
+    	results[limit+3] = iterations/time;
+    	return results;
     }
 
     private Population evolvePopulation(Population oldPopulation) {
