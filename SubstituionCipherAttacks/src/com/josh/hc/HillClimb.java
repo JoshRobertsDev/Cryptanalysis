@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.josh.cipher.Alphabet;
 import com.josh.cipher.Fitness;
+import com.josh.cipher.FrequencyAnalyse;
 
 public class HillClimb {
 	
@@ -19,7 +20,8 @@ public class HillClimb {
 	public Double[] searchOptimalKey(String cipherText, int iterations) {
 		fitness.setCipherText(cipherText);
 		Alphabet key = new Alphabet();
-		key.Scramble();
+		//key.Scramble();
+		key.setAlphabet(FrequencyAnalyse.getKey(cipherText));
 		
 		int intervals = 20;
     	int scoreIterator = 0;
@@ -29,6 +31,7 @@ public class HillClimb {
 		bestKey = key.getAlphabet().clone();
 		bestScore = fitness.score(key.getAlphabet());
 		results[scoreIterator] = bestScore;
+		System.out.println(bestScore);
 		
 		double start = System.currentTimeMillis();
 		for(int i = 0; i <= iterations; i++) {
@@ -42,6 +45,7 @@ public class HillClimb {
 			}
 			if(i % scoreInterval == 0) {
     			scoreIterator++;
+    			System.out.println(bestScore);
     			results[scoreIterator] = bestScore;
     		}
 		}
