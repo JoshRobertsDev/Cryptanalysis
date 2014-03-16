@@ -5,10 +5,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import com.josh.cipher.Alphabet;
 import com.josh.cipher.Cipher;
+import com.josh.cipher.Fitness;
+import com.josh.cipher.FrequencyAnalyse;
 import com.josh.genetic.Genetic;
 import com.josh.hc.HillClimb;
 import com.josh.pso.Particle;
@@ -22,7 +26,7 @@ public class Main {
 		Alphabet key = new Alphabet();
 		key.Scramble();
 		
-		String plaintext = "TWO HOUSEHOLDS BOTH ALIKE IN DIGNITY IN FAIR VERONA WHERE WE LAY OUR SCENE FROM ANCIENT GRUDGE BREAK TO NEW MUTINY WHERE CIVIL BLOOD MAKES CIVIL HANDS UNCLEAN FROM FORTH THE FATAL LOINS OF THESE TWO FOES A PAIR OF STAR CROSSED LOVERS TAKE THEIR LIFE WHOSE MISADVENTURE PITEOUS OVERTHROWS DO WITH THEIR DEATH BURY THEIR PARENTS STRIFE THE FEARFUL PASSAGE OF THEIR DEATH MARKED LOVE AND THE CONTINUANCE OF THEIR PARENTS RAGE WHICH BUT THEIR CHILDREN END NOUGHT COULD REMOVE IS NOW THE TWO HOURS TRAFFIC OF OUR STAGE THE WHICH IF YOU WITH PATIENT EARS ATTEND WHAT HERE";
+		String plaintext = "TWO HOUSEHOLDS BOTH ALIKE IN DIGNITY IN FAIR VERONA WHERE WE LAY SCENE FROM AN ANCIENT GRUDGE BREAK TO NEW MUTINY WHERE CIVIL BLOOD MAKES CIVIL HANDS UNCLEAN FROM THE FATAL LOINS OF THESE TWO FOES A PAIR OF STAR CROSSED LOVERS TAKE THEIR LIFE WHOSE MISADVENTURE A PITEOUS OVERTHROWS DO WITH THEIR DEATH BURY THEIR PARENTS STRIFE THE FEARFUL PASSAGE OF THEIR DEATH MARKED LOVE AND THE CONTINUANCE OF THEIR PARENTS RAGE WHICH BUT THEIR CHILDREN END NOUGHT COULD REMOVE IS NOW THE TWO HOURS TRAFFIC OF STAGE THE WHICH IF YOU WITH PATIENT EARS ATTEND WHAT HERE";
 		//String plaintext = "THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG CAT SAT ON MAT DOG CHASED CAT";
 		String cipherText = new String(Cipher.substitute(plaintext, alphabet.getAlphabet(), key.getAlphabet()));
 	/*
@@ -32,17 +36,17 @@ public class Main {
 	*/
 		
 		List<Double[]> resultsList = new ArrayList<>();		
-		//int iterations = 300000;
-		int iterations = 800;
+		int iterations = 300000;
+		//int iterations = 800;
 		//int iterations = 300;
 		int scoreInterval = iterations/20;
 		String output = "";
 		
 		for(int i = 0; i < 1; i++) {
-			Genetic genetic = new Genetic();
-			resultsList.add(genetic.searchOptimalKey(20, iterations, cipherText, 10));
-			//HillClimb hc = new HillClimb();
-			//resultsList.add(hc.searchOptimalKey(cipherText, iterations));
+			//Genetic genetic = new Genetic();
+			//resultsList.add(genetic.searchOptimalKey(1, iterations, cipherText, 10));
+			HillClimb hc = new HillClimb();
+			resultsList.add(hc.searchOptimalKey(cipherText, iterations));
 			//ParticleSwarm ps = new ParticleSwarm();
 			//resultsList.add(ps.searchOptimalKey(500, iterations, cipherText, 0.2, 0.2));
 			System.out.println("Iteration: " + (i+1));
