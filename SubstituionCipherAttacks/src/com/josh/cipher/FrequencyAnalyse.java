@@ -5,16 +5,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class FrequencyAnalyse {
 	
-	private final static Character[] frequency = {'E','T','A','O','I','R','H','N','S','L','D','C','U','M','F','G','P','W','Y','B','V','K','J','Q','X','Z'};
+	private final static Character[] frequency = {'E','T','A','O','I','R','H','N','S','L','D','C','U','M','F','G','P','W','Y','B','V','K','J','X','Z','Q'};
 	
-	public static List<Character>  monograms(String cipherText) {
+	private static Map<Character, Integer>  monograms(String cipherText) {
 		cipherText = cipherText.replaceAll(" ", "");
 		Map<Character,Integer> frequencyMap = new HashMap<Character,Integer>();          
 		for(int i = 0; i < cipherText.length(); i++){
@@ -26,13 +29,14 @@ public class FrequencyAnalyse {
 			   frequencyMap.put(c,1);
 		   }
 		}
+		//System.out.println(frequencyMap);
 		return sortByValue(frequencyMap);
 	}
 	
-	private static List<Character> sortByValue(Map<Character, Integer> frequencyMap) {
+	private static Map<Character, Integer> sortByValue(Map<Character, Integer> frequencyMap) {
 		List<Entry<Character, Integer>> list = new LinkedList<Entry<Character, Integer>>(frequencyMap.entrySet());
-		List<Character> key = new ArrayList<>();
-        // Sorting the list based on values
+        
+		// Sorting the list based on values
         Collections.sort(list, new Comparator<Entry<Character, Integer>>()
         {
             public int compare(Entry<Character, Integer> o1,
@@ -42,49 +46,50 @@ public class FrequencyAnalyse {
             }
         });
         // Maintaining insertion order with the help of LinkedList
-        //Map<Character, Integer> sortedMap = new LinkedHashMap<Character, Integer>();
+        Map<Character, Integer> sortedMap = new LinkedHashMap<Character, Integer>();
         for (Entry<Character, Integer> entry : list)
         {
-        	key.add(entry.getKey());
-            //sortedMap.put(entry.getKey(), entry.getValue());
+            sortedMap.put(entry.getKey(), entry.getValue());
         }
-
-        return key;
+        return sortedMap;
 	}
 	
 	public static char[] getKey(String cipherText) {
 		List<Character> expectedFrequency = Arrays.asList(frequency);
-		List<Character> frequencyList = monograms(cipherText);
-		List<Character> missingLetters = new ArrayList<>();
-		List<Character> charList = new ArrayList<>();
+		Map<Character, Integer> frequencyMap = monograms(cipherText);				
+		List<Character> frequencyList = new ArrayList<>();
+		frequencyList.addAll(frequencyMap.keySet());
 		char[] key = new char[26];
 		
-		System.out.println(expectedFrequency + "\n" + frequencyList);
+		for(char letter = 'A'; letter <= 'Z'; letter++) {
+    		if(!frequencyList.contains(letter))
+    			frequencyList.add(letter);
+    	}
+		//System.out.println(expectedFrequency + "\n" + frequencyList);
 		
 		int count = 0;
 		for(Character i = 'A'; i <= 'Z'; i++) {
 			int index = expectedFrequency.indexOf(i);
-			if(index < frequencyList.size()) {
-				key[count] = frequencyList.get(index);
-				count++;
-			}
-		}
-		
-		for(int i = 0; i < key.length; i++) {
-			charList.add(key[i]);
-		}
-		
-    	for(char letter = 'A'; letter <= 'Z'; letter++) {
-    		if(!charList.contains(letter))
-    			missingLetters.add(letter);
-    	}
-    	
-    	for(int i = 0; i < charList.size(); i++) {
-    		if(charList.get(i) == '\0') {
-    			key[i] = missingLetters.get(0);
-    			missingLetters.remove(0);
-    		} 
-    	}
+			key[count] = frequencyList.get(index);
+			count++;
+		}		
 		return key;
 	}
+	/*
+	private String permutationString() {
+		return null;
+	}
+	
+	public static void permutation(String str) { 
+	    permutation("", str); 
+	}
+
+	private static void permutation(String prefix, String str) {
+	    int n = str.length();
+	    if (n == 0) System.out.println(prefix);
+	    else {
+	        for (int i = 0; i < n; i++)
+	            permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n));
+	    }
+	}*/
 }

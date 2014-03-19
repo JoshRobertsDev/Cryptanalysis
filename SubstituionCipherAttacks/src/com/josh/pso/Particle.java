@@ -17,7 +17,7 @@ public class Particle extends Alphabet {
 		return this.getAlphabet();
 	}
 	
-	private void setPosition(char[] newPosition) {
+	public void setPosition(char[] newPosition) {
 		this.setAlphabet(newPosition);
 	}
 	

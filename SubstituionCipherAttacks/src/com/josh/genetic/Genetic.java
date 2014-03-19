@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.josh.cipher.Fitness;
+import com.josh.cipher.FrequencyAnalyse;
 
 public class Genetic {
 
@@ -21,6 +22,9 @@ public class Genetic {
     	
     	Population population = new Population(populationSize);
     	population.populate();
+    	Individual frequencyAnalysedIndividual = new Individual();
+    	frequencyAnalysedIndividual.setAlphabet(FrequencyAnalyse.getKey(cipherText));
+    	population.setEliteIndividual(frequencyAnalysedIndividual);
     	
     	int intervals = 20;
     	int scoreIterator = 0;
@@ -40,7 +44,7 @@ public class Genetic {
     		}
     	}
     	double time = (System.currentTimeMillis() - start)/1000;
-    	
+    	System.out.println(getFittestFromPopulation(population).getAlphabet());
     	results[intervals+1] = (double) iterations;
     	results[intervals+2] = time;
     	results[intervals+3] = iterations/time;

@@ -31,7 +31,7 @@ public class HillClimb {
 		bestKey = key.getAlphabet().clone();
 		bestScore = fitness.score(key.getAlphabet());
 		results[scoreIterator] = bestScore;
-		System.out.println(bestScore);
+		//System.out.println(bestScore);
 		
 		double start = System.currentTimeMillis();
 		for(int i = 0; i <= iterations; i++) {
@@ -45,7 +45,7 @@ public class HillClimb {
 			}
 			if(i % scoreInterval == 0) {
     			scoreIterator++;
-    			System.out.println(bestScore);
+    			//System.out.println(bestScore);
     			results[scoreIterator] = bestScore;
     		}
 		}
@@ -53,6 +53,7 @@ public class HillClimb {
 		results[intervals+1] = (double) iterations;
     	results[intervals+2] = time;
     	results[intervals+3] = iterations/time;
+    	System.out.println(bestKey);
 		return results;
 	}
 	

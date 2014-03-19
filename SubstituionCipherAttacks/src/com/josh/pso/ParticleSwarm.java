@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.josh.cipher.Fitness;
+import com.josh.cipher.FrequencyAnalyse;
 
 public class ParticleSwarm {
 	public List<Particle> swarm = new ArrayList<>();
@@ -43,6 +44,9 @@ public class ParticleSwarm {
     	int scoreIterator = 0;
     	double scoreInterval = iterations/intervals;
     	Double[] results = new Double[intervals+4];
+    	Particle frequencyAnalysedParticle = new Particle();
+    	frequencyAnalysedParticle.setPosition(FrequencyAnalyse.getKey(cipherText));
+    	swarm.set(0, frequencyAnalysedParticle);
 		
     	double start = System.currentTimeMillis();
 		for(int i = 0; i <= iterations; i++) {
@@ -66,6 +70,7 @@ public class ParticleSwarm {
 		results[intervals+1] = (double) iterations;
     	results[intervals+2] = time;
     	results[intervals+3] = iterations/time;
+    	System.out.println(getBestParticle().getPosition());
     	return results;
 	}
 }
